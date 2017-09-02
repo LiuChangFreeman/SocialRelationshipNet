@@ -1,0 +1,171 @@
+﻿<Window x:Class="数据结构课程设计_社会关系网络.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:数据结构课程设计_社会关系网络.ViewModel"
+        xmlns:data="clr-namespace:数据结构课程设计_社会关系网络.Model"
+        mc:Ignorable="d"
+        Title="社会关系网络" Height="800" Width="800" ResizeMode="CanMinimize" SizeChanged="Window_SizeChanged" >
+    <Window.Resources>
+        <Style x:Key="MyItemsControlStyle" TargetType="ItemsControl">
+            <Setter Property="ItemsPanel">
+                <Setter.Value>
+                    <ItemsPanelTemplate>
+                        <Canvas/>
+                    </ItemsPanelTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style>
+                        <Setter Property="Canvas.Left" Value="{Binding X}" />
+                        <Setter Property="Canvas.Top" Value="{Binding Y}" />
+                    </Style>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate DataType="data:Person">
+                        <Grid Width="108">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                                <ColumnDefinition Width="80"></ColumnDefinition>
+                                <ColumnDefinition Width="*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <Button Visibility="{Binding Delete}" Name="delete" BorderBrush="Transparent" Grid.Column="0" FontSize="16" Background="Transparent" Click="delete_Click">-</Button>
+                            <Border Grid.Column="1" Width="80" Height="30" Background="AntiqueWhite" >
+                                <Button Content="{Binding Person.Name}" Background="Transparent" BorderBrush="Transparent" x:Name="Unit" Click="Unit_Click" ></Button>
+                            </Border>
+                            <Button Grid.Column="2" Visibility="{Binding Add}"  Name="add" BorderBrush="Transparent"  FontSize="16" Background="Transparent" Click="add_Click_1">+</Button>
+                        </Grid>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ItemsControl Grid.RowSpan="6" Grid.ColumnSpan="5" Name="People"  Style="{StaticResource MyItemsControlStyle}"></ItemsControl>
+        <Canvas x:Name="WhiteBoard" Grid.RowSpan="6" Grid.ColumnSpan="5"/>
+        <Button Name="Add" Grid.Row="6" Width="80" Height="24" Margin="0,-75,0,0" Click="Add_Click">新增成员</Button>
+        <Button Name="Remove" Grid.Row="6" Width="80" Height="24"  Margin="0,0,0,0" Click="Remove_Click">删除成员</Button>
+        <Button Name="Adjust" Grid.Row="6" Width="80" Height="24"  Margin="0,75,0,0" Click="Adjust_Click">重置示例</Button>
+        <TextBlock Grid.Column="3" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-40,0,0">群组</TextBlock>
+        <TextBlock Name="Selected" Grid.Column="3" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,40,0,0"></TextBlock>
+        <ListBox Background="Azure" Name="Groups" Grid.Column="3" Grid.Row="1" Grid.RowSpan="4" ItemsSource="{Binding GraphView.Graph.Groups}" SelectionChanged="Groups_SelectionChanged" ScrollViewer.CanContentScroll="True">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel></StackPanel>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Grid Width="210">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                            <ColumnDefinition Width="60"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" FontSize="20" Text="{Binding Name}" Grid.Row="0"/>
+                        <Button x:Name="Chioce"  Content="{Binding Content}" Grid.Column="1" Click="Chioce_Click" ></Button>
+                        <ListBox Grid.ColumnSpan="2" Background="BlanchedAlmond"  Grid.Row="1" ItemsSource="{Binding Persons}" IsEnabled="False">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel></StackPanel>
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <TextBlock FontSize="20" Text="{Binding Name}" Grid.Row="0"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button x:Name="AddGroup"  Width="80" Height="30" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" Margin="0,-45,0,0" Click="AddGroup_Click">增加群组</Button>
+        <Button x:Name="eleteGroup"  Width="80" Height="30" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" Margin="0,45,0,0" Click="eleteGroup_Click">删除群组</Button>
+        <ListBox Background="AntiqueWhite" Name="Results" Grid.Column="4" Grid.Row="1" Grid.RowSpan="4" ScrollViewer.CanContentScroll="True">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel></StackPanel>
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate DataType="Data:Person">
+                    <Grid Width="210" ToolTip="{Binding Information}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition Width="*"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock FontSize="20" Text="{Binding Name}"/>
+                        <TextBlock Grid.Column="1" FontSize="20" Text="{Binding Score}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBlock Grid.ColumnSpan="2" TextWrapping="WrapWithOverflow" Grid.Row="1" FontSize="15" Background="AliceBlue" Text="{Binding Information}"/>
+                    </Grid>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <TextBlock Grid.Column="4" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,-40,0,0">可能认识的人</TextBlock>
+        <TextBox x:Name="Friends" Text="{Binding FriendWeight}" MinWidth="50" Grid.Row="6" Margin="60,-60,0,0" Grid.Column="4" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+        <TextBox x:Name="Base" Text="{Binding BaseWeight}" MinWidth="50" Grid.Row="6" Margin="60,0,0,0" Grid.Column="4" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+        <TextBox x:Name="Group" Text="{Binding GroupWeight}" MinWidth="50" Grid.Row="6" Margin="60,60,0,0" Grid.Column="4" FontSize="20" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+        <TextBlock  MinWidth="50" Grid.Row="6" Margin="-60,-60,0,0" Grid.Column="4" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center">朋友权重</TextBlock>
+        <TextBlock  MinWidth="50" Grid.Row="6" Margin="-60,0,0,0" Grid.Column="4" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center">基本权重</TextBlock>
+        <TextBlock  MinWidth="50" Grid.Row="6" Margin="-60,60,0,0" Grid.Column="4" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Center">群组权重</TextBlock>
+        <Grid Name="Infromation" Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="3" DataContext="{Binding Person}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <TextBlock Text="姓名" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBox MinWidth="80" BorderBrush="Transparent" Grid.RowSpan="3" Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <TextBlock Grid.Column="1" Text="地域" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBox MinWidth="80" BorderBrush="Transparent"  Grid.Column="1" Grid.Row="1" Text="{Binding Regin}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <TextBlock  Grid.Column="2" Text="小学" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBox MinWidth="80" BorderBrush="Transparent"  Grid.Column="2" Grid.Row="1" Text="{Binding Juniorschool}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <TextBlock Grid.Column="3" Text="中学" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBox MinWidth="80" BorderBrush="Transparent"  Grid.Column="3" Grid.Row="1" Text="{Binding Middleschool}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <TextBlock Grid.Column="4" Text="大学" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBox MinWidth="80" BorderBrush="Transparent"  Grid.Column="4" Grid.Row="1" Text="{Binding College}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <TextBlock Grid.Column="5" Text="公司" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBlock>
+            <TextBox MinWidth="80" BorderBrush="Transparent"  Grid.Column="5" Grid.Row="1" Text="{Binding Company}" HorizontalAlignment="Center" VerticalAlignment="Center"></TextBox>
+            <Border BorderThickness="1" BorderBrush="Red" Grid.ColumnSpan="6" Grid.RowSpan="2"/>
+        </Grid>
+    </Grid>
+</Window>
